@@ -1,0 +1,29 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/gh/DogeLakeDev/ScriptsForMinecraftServer@latest/modules/sdk/%40sfmc-sdk/schemas/sapi-manifest.v2.schema.json",
+  "schemaVersion": 2,
+  "id": "fly-area",
+  "name": "区域飞行",
+  "configKey": "fly_area",
+  "enabledByDefault": true,
+  "canDisable": true,
+  "requires": ["area"],
+  "permissions": [
+    "config:read:fly_area",
+    "fly_area.use"
+  ],
+  "services": {
+    "provides": [],
+    "requires": [
+      {
+        "name": "area.registerFeature",
+        "input": {
+          "type": "object"
+        },
+        "output": {
+          "type": "object"
+        }
+      }
+    ]
+  },
+  "notes": "挂接 area 特性 fly：进区 mayfly、离区剥离+缓降；纯内存赋权集合，离线清理防带飞。"
+}

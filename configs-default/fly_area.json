@@ -1,0 +1,5 @@
+{
+  "slow_falling_duration_ticks": 100,
+  "slow_falling_amplifier": 0,
+  "actionbar_notify": true
+}
