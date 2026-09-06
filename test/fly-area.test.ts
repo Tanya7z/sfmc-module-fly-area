@@ -31,7 +31,6 @@ describe("fly-area identity", () => {
     assert.equal(manifest.id, "fly-area");
     assert.equal(manifest.configKey, "fly_area");
     assert.deepEqual(manifest.requires, ["area"]);
-    assert.ok(manifest.permissions.includes("fly_area.use"));
     assert.ok(
       manifest.services.requires.some((s) => s.name === "area.registerFeature"),
     );

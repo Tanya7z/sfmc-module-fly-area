@@ -6,10 +6,11 @@
   "configKey": "fly_area",
   "enabledByDefault": true,
   "canDisable": true,
-  "requires": ["area"],
+  "requires": [
+    "area"
+  ],
   "permissions": [
-    "config:read:fly_area",
-    "fly_area.use"
+    "config:read:fly_area"
   ],
   "services": {
     "provides": [],
