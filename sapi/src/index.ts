@@ -3,8 +3,8 @@
  */
 
 import { Player, world } from "@minecraft/server";
-import { config } from "@sfmc-bds/sdk/sapi/config";
 import { ModuleRegistry } from "@sfmc-bds/sdk/module-loader";
+import { config } from "@sfmc-bds/sdk/sapi/config";
 import { debug, Permission } from "@sfmc-bds/sdk/sapi/runtime";
 import { service } from "@sfmc-bds/sdk/sapi/service";
 import {
@@ -32,10 +32,7 @@ function notifyActionBar(player: Player, text: string): void {
   try {
     player.onScreenDisplay.setActionBar(text);
   } catch (err) {
-    debug.w(
-      "FlyArea",
-      `actionbar 失败: ${err instanceof Error ? err.message : String(err)}`,
-    );
+    debug.w("FlyArea", `actionbar 失败: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
@@ -43,10 +40,7 @@ function setMayFly(player: Player, enabled: boolean): void {
   try {
     player.runCommand(buildMayFlyCommand(enabled));
   } catch (err) {
-    debug.w(
-      "FlyArea",
-      `mayfly=${enabled} 失败: ${err instanceof Error ? err.message : String(err)}`,
-    );
+    debug.w("FlyArea", `mayfly=${enabled} 失败: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
@@ -57,10 +51,7 @@ function applySlowFalling(player: Player): void {
       showParticles: false,
     });
   } catch (err) {
-    debug.w(
-      "FlyArea",
-      `缓降失败: ${err instanceof Error ? err.message : String(err)}`,
-    );
+    debug.w("FlyArea", `缓降失败: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
@@ -154,9 +145,6 @@ ModuleRegistry.register({
       // 飞行能力标记节点（进区动态赋予语义；等级 Any）
       Permission.register(PERM_USE, Permission.Any);
     },
-    registerCommands() {
-      // 纯空间插槽驱动，无玩家命令面
-    },
     registerEvents() {
       // 规格将 fly 挂接写在本阶段；area 于 init 才 provide，故 service.call 放 init。
       // 离线清理：area.handlePlayerLeave 会派发 onLeave → 剥离 mayfly 并清标记。
@@ -164,11 +152,7 @@ ModuleRegistry.register({
     async init() {
       await loadConfig();
       config.onChange((key) => {
-        if (
-          key === "slow_falling_duration_ticks" ||
-          key === "slow_falling_amplifier" ||
-          key === "actionbar_notify"
-        ) {
+        if (key === "slow_falling_duration_ticks" || key === "slow_falling_amplifier" || key === "actionbar_notify") {
           void loadConfig();
         }
       });
@@ -176,16 +160,12 @@ ModuleRegistry.register({
       try {
         await registerFlyFeature();
       } catch (err) {
-        debug.e(
-          "FlyArea",
-          "area.registerFeature 失败",
-          err instanceof Error ? err : new Error(String(err)),
-        );
+        debug.e("FlyArea", "area.registerFeature 失败", err instanceof Error ? err : new Error(String(err)));
       }
 
       debug.i(
         "FlyArea",
-        `init slow_falling=${cfg.slow_falling_duration_ticks}t amp=${cfg.slow_falling_amplifier} notify=${cfg.actionbar_notify} hooked=${featureRegistered}`,
+        `init slow_falling=${cfg.slow_falling_duration_ticks}t amp=${cfg.slow_falling_amplifier} notify=${cfg.actionbar_notify} hooked=${featureRegistered}`
       );
     },
     cleanup() {
