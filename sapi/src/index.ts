@@ -2,7 +2,7 @@
  * @sfmc-bds/module-fly-area — 区域飞行赋权（area 特性插槽 fly）
  */
 
-import { Player, world } from "@minecraft/server";
+import { GameMode, Player, world } from "@minecraft/server";
 import { ModuleRegistry } from "@sfmc-bds/sdk/module-loader";
 import { config } from "@sfmc-bds/sdk/sapi/config";
 import { debug, Permission } from "@sfmc-bds/sdk/sapi/runtime";
@@ -61,7 +61,24 @@ function applySlowFalling(player: Player): void {
  */
 function revokeFly(player: Player, withSlowFall: boolean): boolean {
   if (!grantState.clear(player.id)) return false;
+  let wasFlying = false;
+  try {
+    wasFlying = player.isFlying;
+  } catch {
+    wasFlying = true;
+  }
   setMayFly(player, false);
+  try {
+    if (wasFlying && player.getGameMode() === GameMode.Survival) {
+      try {
+        player.setGameMode(GameMode.Adventure);
+      } finally {
+        player.setGameMode(GameMode.Survival);
+      }
+    }
+  } catch (err) {
+    debug.w("FlyArea", `结束飞行失败: ${err instanceof Error ? err.message : String(err)}`);
+  }
   if (withSlowFall) {
     let onGround = true;
     let flying = false;
@@ -73,12 +90,10 @@ function revokeFly(player: Player, withSlowFall: boolean): boolean {
       onGround = false;
       flying = true;
     }
-    if (shouldApplySlowFalling(onGround, flying)) {
+    if (shouldApplySlowFalling(onGround, flying || wasFlying)) {
       applySlowFalling(player);
-      notifyActionBar(player, "§e已离开飞行区，缓降保护生效");
-    } else {
-      notifyActionBar(player, "§7已离开飞行区");
     }
+    notifyActionBar(player, "已离开飞行区");
   }
   return true;
 }
@@ -95,7 +110,7 @@ function onEnter(player: Player): void {
 
   setMayFly(player, true);
   grantState.mark(player.id);
-  notifyActionBar(player, "§a已进入飞行区，可双击跳跃飞行");
+  notifyActionBar(player, "已进入飞行区");
 }
 
 function onLeave(player: Player): void {
