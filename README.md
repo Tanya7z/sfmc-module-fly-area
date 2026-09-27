@@ -7,9 +7,9 @@ Wave C official SFMC module: **fly-area**（区域飞行赋权）.
 ## Develop
 
 ```bash
-npm install
-npm run typecheck
-npm test
+pnpm install
+pnpm run typecheck
+pnpm run test
 ```
 
 Install into platform:
